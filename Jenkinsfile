@@ -12,14 +12,20 @@ def branches = [:]
 branches["a"] = {
   node {
     stage("a") {
-      echo "a"
+      script {
+        sleep 10
+        echo "a"
+      }
     }
   }
 }
 branches["b"] = {
   node {
     stage("b") {
-      echo "b"
+      script {
+        sleep 10
+        echo "b"
+      }
     }
   }
 }
