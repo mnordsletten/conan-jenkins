@@ -1,5 +1,5 @@
-node('conan-worker-1'){
+node('conan-worker-2'){
     stage("Get project"){
-        echo "Hello world 2"
+        echo "Hello world 3"
     }
 }
