@@ -8,26 +8,21 @@ node('conan-worker-2'){
     }
 }
 
-def branches = [:]
-branches["a"] = {
-  node {
-    stage("a") {
-      script {
-        sleep 10
-        echo "a"
-      }
-    }
-  }
-}
-branches["b"] = {
-  node {
-    stage("b") {
-      script {
-        sleep 10
-        echo "b"
-      }
-    }
-  }
-}
+def versions = ["v1.1.18", "v1.1.19", "a", "b", "c"]
 
+def branches = [:]
+
+for (v in versions) {
+  branches[v] = {
+
+    node('conan_pipe_worker') {
+      stage(v) {
+        script {
+          sleep 5
+          echo v
+        }
+      }
+    }
+  }
+}
 parallel branches
