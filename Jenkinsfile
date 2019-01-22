@@ -1,16 +1,18 @@
 pipeline {
   agent { label 'conan_pipe_worker'}
   parameters {
-    string(name: 'Greeting', defaultValue: 'hello')
+    string(name: 'Versions', defaultValue: 'v1, v2, v3')
+    string(name: 'Architectures', defaultValue: 'release, debug')
+    string(name: 'Build_types', defaultValue: 'x86_64, i686')
   }
 
 stages {
   stage('Build') {
     steps {
       script {
-        def versions = ["v1", "v2"]
-        def architectures = ["x86_64", "i686"]
-        def build_types = ["release", "debug"]
+        def versions = "${params.Versions}".split(',')
+        def architectures = "${params.Architectures}".split(',')
+        def build_types = "${params.Build_types}".split(',')
 
         def builds = [:]
 
