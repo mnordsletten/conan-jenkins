@@ -10,9 +10,9 @@ stages {
   stage('Build') {
     steps {
       script {
-        def versions = "${params.Versions}".split(',')
-        def architectures = "${params.Architectures}".split(',')
-        def build_types = "${params.Build_types}".split(',')
+        def versions = "${params.Versions}".replaceAll("\\s", "").split(',')
+        def architectures = "${params.Architectures}".replaceAll("\\s", "").split(',')
+        def build_types = "${params.Build_types}".replaceAll("\\s", "").split(',')
 
         def builds = [:]
 
