@@ -24,7 +24,12 @@ stages {
               builds[buildName] = {
                 node('conan_pipe_worker') {
                   stage(buildName) {
-                    echo buildName
+                    step {
+                      echo buildName
+                    }
+                    step {
+                      echo "done"
+                    }
                   }
                 }
               }
