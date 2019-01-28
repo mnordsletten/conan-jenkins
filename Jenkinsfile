@@ -25,6 +25,7 @@ stages {
         def build_types = "${params.Build_types}".replaceAll("\\s", "").split(',')
 
         def builds = [:]
+        p = load 'functions.groovy'
 
         for (ver in versions) {
           for (arch in architectures) {
@@ -35,7 +36,6 @@ stages {
                 node('conan_pipe_worker') {
                   stage(buildName) {
                     echo buildName
-                    p = load 'functions.groovy'
                     p.funcA()
                     p.funcB("it's BB")
                   }
