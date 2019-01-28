@@ -1,5 +1,5 @@
 pipeline {
-  agent { label 'conan_pipe_worker'}
+  agent { label 'conan-worker-1'}
   parameters {
     string(name: 'Versions', defaultValue: 'v1, v2, v3')
     string(name: 'Architectures', defaultValue: 'release, debug')
