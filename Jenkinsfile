@@ -24,12 +24,10 @@ stages {
               builds[buildName] = {
                 node('conan_pipe_worker') {
                   stage(buildName) {
-                    step {
-                      echo buildName
-                    }
-                    step {
-                      echo "done"
-                    }
+                    echo buildName
+                    p = load 'functions.groovy'
+                    p.funcA()
+                    p.funcB("it's BB")
                   }
                 }
               }
