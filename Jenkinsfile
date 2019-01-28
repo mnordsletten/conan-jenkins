@@ -1,52 +1,26 @@
 pipeline {
-  agent { label 'conan_pipe_worker'}
-  parameters {
-    string(name: 'Versions', defaultValue: 'v1, v2, v3')
-    string(name: 'Architectures', defaultValue: 'release, debug')
-    string(name: 'Build_types', defaultValue: 'x86_64, i686')
-  }
+  agent { label 'conan_pipe_worker' }
 
-stages {
-  stage('before') {
-    steps {
-      sh 'pwd'
-      script {
-        p = load 'functions.groovy'
-        p.funcA()
-        p.funcB("tis B")
-      }
-    }
-  }
-  stage('Build') {
-    steps {
-      script {
-        def versions = "${params.Versions}".replaceAll("\\s", "").split(',')
-        def architectures = "${params.Architectures}".replaceAll("\\s", "").split(',')
-        def build_types = "${params.Build_types}".replaceAll("\\s", "").split(',')
+  stages {
+    stage('create') {
+      steps {
+        script {
+          jobDsl {
 
-        def builds = [:]
-        p = load 'functions.groovy'
-
-        for (ver in versions) {
-          for (arch in architectures) {
-            for (build in build_types) {
-              String buildName = "${build}-${arch}-${ver}"
-
-              builds[buildName] = {
-                node('conan_pipe_worker') {
-                  stage(buildName) {
-                    echo buildName
-                    p.funcA()
-                    p.funcB("it's BB")
-                  }
+            pipelineJob('test') {
+              description("Your App Pipeline") 
+              keepDependencies(false)
+              definition {
+                cpsScm {
+                  scriptPath('a/Jenkinsfile')
+                  extensions { }  // required as otherwise it may try to tag the repo, which you may not want
                 }
               }
             }
+
           }
         }
-        parallel builds
       }
     }
   }
-}
 }
