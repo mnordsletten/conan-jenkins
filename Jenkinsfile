@@ -8,7 +8,9 @@ pipeline {
 
 stages {
   stage('before') {
-    sh 'pwd'
+    steps {
+      sh 'pwd'
+    }
   }
   stage('Build') {
     steps {
