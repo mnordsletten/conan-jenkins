@@ -10,6 +10,11 @@ stages {
   stage('before') {
     steps {
       sh 'pwd'
+      script {
+        p = load 'functions.groovy'
+        p.funcA()
+        p.funcB("tis B")
+      }
     }
   }
   stage('Build') {
