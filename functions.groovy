@@ -9,3 +9,5 @@ def funcB(input) {
    //sh "..."
    echo input
 }
+
+return this;
