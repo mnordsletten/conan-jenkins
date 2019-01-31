@@ -1,7 +1,7 @@
 pipeline {
   agent { label 'conan_worker' }
   parameters {
-    choice(name: 'Versions', choices: ['', 'v1', 'v2', 'v3'], description: 'Target version to build')
+    choice(name: 'Versions', choices: ['', '1.0', '2.0'], description: 'Target version to build')
     string(name: 'Architectures', defaultValue: 'release, debug', description: 'Which arch')
     string(name: 'Build_types', defaultValue: 'x86_64, i686', description: 'Build types')
   }
@@ -14,8 +14,38 @@ pipeline {
             echo "No version was selected, exiting"
           } else {
             p = load 'functions.groovy'
-            p.build("${params.Versions}", "${params.Architectures}", "${params.Build_types}")
-            p.upload("http://internet.com")
+            def conanfile_path = p.conanfile_path("${env.SCRIPT_PATH}", "${params.Versions}")
+            stash includeos: '*', name: 'all'
+            def build_cmds = p.build("${params.Versions}", "${params.Architectures}", "${params.Build_types}", "${conanfile_path}")
+
+            def builds = [:]
+
+            build_cmds.each {
+              builds["${it.key}"] = {
+                node('conan_worker') {
+                  stage("${it.key}") {
+                    unstash 'all'
+                    sh "${it.value}"
+                  }
+                }
+              }
+            }
+
+            /*
+            for (key in buildJobs.keySet()) {
+              builds[key] = {
+                node('conan_worker') {
+                  stage(key) {
+                    unstash 'all'
+                    sh buildJobs[key]
+                  }
+                }
+              }
+            }
+            */
+            parallel builds
+
+            //p.upload("http://internet.com")
           }
         }
       }

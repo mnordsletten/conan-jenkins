@@ -76,6 +76,9 @@ stage('Create jobs') {
           jobDsl scriptText: """
             pipelineJob("${name}") {
               description("Pipeline for ${name}")
+              environmentVariables {
+                env('SCRIPT_PATH', "${path}")
+              }
               definition {
                 cpsScm {
                   lightweight(true)
@@ -94,8 +97,8 @@ stage('Create jobs') {
                 }
               }
             }
+            queue("${name}")
             """
-            build "${name}"
           }
       }
       parallel jobs
